@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: registry.gitlab.com/transipedia/dekupl-run:base
+
+%files
+  bin /tmp
+  config.json /tmp
+  Snakefile /tmp
+
+%post
+     mkdir -p /dekupl/bin/ \
+  && cp -r /tmp/bin /dekupl/ \
+  && cp /tmp/config.json /dekupl/ \
+  && cp /tmp/Snakefile /dekupl/ \
+  && ln -s /usr/local/bin/computeNF /dekupl/bin/computeNF \
+  && ln -s /usr/local/bin/joinCounts /dekupl/bin/joinCounts \
+  && ln -s /usr/local/bin/mergeTags /dekupl/bin/mergeTags \
+  && ln -s /usr/local/bin/TtestFilter /dekupl/bin/TtestFilter \
+  && ln -s /usr/local/bin/kallisto /dekupl/bin/kallisto
+
+%runscript
+  exec snakemake -s /dekupl/Snakefile "$@"
+
+%startscript
+  exec snakemake -s /dekupl/Snakefile "$@"
